@@ -144,6 +144,7 @@
 <pre id="htmlOutput"></pre>
 
 <script>
+// Références aux éléments HTML nécessaires
 const containerDirection = document.getElementById('containerDirection');
 const containerWrap = document.getElementById('containerWrap');
 const containerJustify = document.getElementById('containerJustify');
@@ -163,11 +164,15 @@ const colors = [
   '#1abc9c', '#d35400', '#34495e', '#16a085', '#c0392b'
 ];
 
+// Ajouter un écouteur d'événement au bouton de génération d'éléments
 generateItemsBtn.addEventListener('click', generateItems);
+
+// Ajouter des écouteurs d'événement pour chaque contrôle de conteneur flex
 [containerDirection, containerWrap, containerJustify, containerAlign, containerAlignContent, mediaQueryWidth, smallScreenDirection].forEach(el => {
   el.addEventListener('change', updateFlexbox);
 });
 
+// Fonction pour générer un texte aléatoire avec un nombre de mots spécifié
 function generateRandomText(wordCount) {
   const words = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'Ut', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris', 'nisi', 'ut', 'aliquip', 'ex', 'ea', 'commodo', 'consequat'];
   let text = '';
@@ -177,12 +182,14 @@ function generateRandomText(wordCount) {
   return text.trim();
 }
 
+// Fonction pour générer les éléments flexibles
 function generateItems() {
   const count = parseInt(itemCount.value);
   itemControls.innerHTML = '';
   flexContainer.innerHTML = '';
   
   for (let i = 1; i <= count; i++) {
+    // Créer les contrôles pour chaque élément
     const itemControl = document.createElement('div');
     itemControl.className = 'item-control';
     itemControl.innerHTML = `
@@ -247,13 +254,14 @@ function generateItems() {
     `;
     itemControls.appendChild(itemControl);
     
+    // Créer les éléments flexibles
     const flexItem = document.createElement('div');
     flexItem.className = 'flex-item';
     flexItem.textContent = `Élément ${i}`;
     flexItem.style.backgroundColor = colors[(i - 1) % colors.length];
     flexContainer.appendChild(flexItem);
     
-    // Ajouter des écouteurs d'événements pour les contrôles
+    // Ajouter des écouteurs d'événements pour les contrôles des éléments
     ['order', 'grow', 'shrink', 'basis', 'align', 'content', 'subContainer', 'subContainerItems', 'subContainerDirection', 'subContainerJustify', 'subContainerAlign', 'subContent'].forEach(prop => {
       const element = document.getElementById(`${prop}${i}`);
       if (element) {
@@ -268,9 +276,11 @@ function generateItems() {
     });
   }
   
+  // Mettre à jour le conteneur flex
   updateFlexbox();
 }
 
+// Fonction pour mettre à jour le style du conteneur flex et des éléments flexibles
 function updateFlexbox() {
   const count = parseInt(itemCount.value);
   let containerStyle = `
@@ -302,6 +312,7 @@ function updateFlexbox() {
     
     let flexItem;
     if (isSubContainer) {
+      // Création et style des sous-conteneurs flexibles
       const subContainerItems = document.getElementById(`subContainerItems${i}`).value;
       const subContainerDirection = document.getElementById(`subContainerDirection${i}`).value;
       const subContainerJustify = document.getElementById(`subContainerJustify${i}`).value;
@@ -351,6 +362,7 @@ function updateFlexbox() {
       }
       htmlContent += `  </div>\n`;
     } else {
+      // Création et style des éléments flexibles simples
       flexItem = document.createElement('div');
       flexItem.className = 'flex-item';
       if (content === 'text') {
@@ -391,6 +403,7 @@ function updateFlexbox() {
     }
   }
   
+  // Générer et ajouter les styles CSS pour les media queries
   const mediaQueryStyle = `
 @media (max-width: ${mediaQueryWidth.value}px) {
   .flex-container {
@@ -399,12 +412,15 @@ function updateFlexbox() {
 }
 `;
 
+  // Mettre à jour les zones de sortie de CSS et HTML
   cssOutput.textContent = `.flex-container {${containerStyle}}\n${itemStyles}\n${mediaQueryStyle}`;
   htmlOutput.textContent = `<div class="flex-container">\n${htmlContent}</div>`;
 }
 
+// Générer les éléments flexibles au chargement initial de la page
 generateItems();
 updateFlexbox();
+
 </script>
 </body>
 </html>
