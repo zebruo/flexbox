@@ -6,63 +6,81 @@
   <title>Générateur Flexbox Dynamique Avancé</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    #controlPanel, #itemControls {
-      margin-bottom: 20px;
-    }
-    label {
-      display: inline-block;
-      margin-right: 10px;
-      margin-bottom: 5px;
-    }
-    input, select {
-      margin-right: 20px;
-      margin-bottom: 10px;
-    }
-    #flexContainer {
-      border: 2px solid #333;
-      padding: 10px;
-      margin-bottom: 20px;
-      min-height: 200px;
-    }
-    .flex-item {
-      color: white;
-      padding: 10px;
-      margin: 5px;
-      text-align: center;
-      min-width: 100px;
-      min-height: 50px;
-    }
-    .sub-container {
-      border: 2px dashed #666;
-      padding: 5px;
-      margin: 5px;
-    }
-    pre {
-      background-color: #f1f1f1;
-      padding: 10px;
-      border-radius: 5px;
-      overflow-x: auto;
-    }
-    .item-control {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-    }
-    .sub-container-controls {
-      margin-left: 20px;
-      padding-left: 10px;
-      border-left: 2px solid #ccc;
-    }
-    .flex-item img {
-      max-width: 100%;
-      height: auto;
-    }
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#controlPanel, #itemControls {
+  margin-bottom: 20px;
+}
+
+label {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+input, select {
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+#flexContainer {
+  border: 2px solid #333;
+  padding: 10px;
+  margin-bottom: 20px;
+  min-height: 200px;
+}
+
+.flex-item {
+  color: white;
+  padding: 10px;
+  margin: 5px;
+  text-align: center;
+  min-width: 100px;
+  min-height: 50px;
+  background-color: #555; /* Ajout d'une couleur de fond */
+  border-radius: 5px; /* Coins arrondis */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+.sub-container {
+  border: 2px dashed #666;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px; /* Coins plus arrondis */
+}
+
+pre {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.item-control {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.sub-container-controls {
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 2px solid #ccc;
+}
+
+.flex-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px; /* Coins arrondis pour les images */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
   </style>
 </head>
 <body>
