@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<body>
+<h1>Générateur d'Images Aléatoires avec Placehold.co</h1>
+
+<div id="imageContainer"></div>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  #imageContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  img {
+    margin: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+</style>
+
+<script>
+function generateRandomColor() {
+  return Math.floor(Math.random()*16777215).toString(16);
+}
+
+function generateRandomText() {
+  const texts = ['Nature', 'Technology', 'Art', 'Science', 'Space', 'Ocean', 'City', 'Forest', 'Mountain', 'Desert'];
+  return texts[Math.floor(Math.random() * texts.length)];
+}
+
+function generateImages() {
+  const container = document.getElementById('imageContainer');
+  container.innerHTML = '';
+
+  for (let i = 0; i < 5; i++) {
+    const color = generateRandomColor();
+    const text = generateRandomText();
+    const img = document.createElement('img');
+    img.src = `https://placehold.co/400x400/${color}/FFFFFF?text=${text}`;
+    img.alt = `Random image with text: ${text}`;
+    img.width = 400;
+    img.height = 400;
+    container.appendChild(img);
+  }
+}
+
+generateImages();
+</script>
+
+</body></html>
