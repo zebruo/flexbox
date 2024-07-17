@@ -28,11 +28,40 @@
 
 <script>
 function generateRandomColor() {
-  return Math.floor(Math.random()*16777215).toString(16);
+  let color;
+  do {
+    color = Math.floor(Math.random()*16777215).toString(16);
+  } while (isColorTooCloseToWhiteOrBlack(color));
+  return color;
+}
+
+function isColorTooCloseToWhiteOrBlack(color) {
+  // Convertir la couleur hexadécimale en RGB
+  const r = parseInt(color.substr(0, 2), 16);
+  const g = parseInt(color.substr(2, 2), 16);
+  const b = parseInt(color.substr(4, 2), 16);
+
+  // Calculer la luminosité
+  const luminosity = r + g + b;
+
+  // Définir des seuils pour déterminer les couleurs trop proches de blanc ou noir
+  const minLuminosity = 50;   // Seuil inférieur pour le noir
+  const maxLuminosity = 700;  // Seuil supérieur pour le blanc
+
+  // Vérifier si la luminosité est dans la plage à éviter
+  return (luminosity < minLuminosity || luminosity > maxLuminosity);
 }
 
 function generateRandomText() {
-  const texts = ['Nature', 'Technology', 'Art', 'Science', 'Space', 'Ocean', 'City', 'Forest', 'Mountain', 'Desert'];
+  const texts = [
+    'Nature', 'Technologie', 'Art', 'Science', 'Espace', 'Océan', 'Ville', 'Forêt', 'Montagne', 'Désert',
+    'Coucher de soleil', 'Aventure', 'Voyage', 'Paysage', 'Architecture', 'Numérique', 'Abstrait', 'Futur', 'Vintage', 'Jardin',
+    'Rêve', 'Ancien', 'Méditation', 'Relaxation', 'Fantaisie', 'Magie', 'Faune', 'Écologie', 'Contemporain', 'Histoire',
+    'Astronomie', 'Découverte', 'Robotique', 'Infini', 'Harmonie', 'Exploration', 'Cosmos', 'Univers', 'Paix', 'Espoir',
+    'Sérénité', 'Inspiration', 'Réflexion', 'Voyage', 'Brillance', 'Sérénité', 'Découverte', 'Évasion', 'Liberté', 'Charme',
+    'Cascade', 'Aventure', 'Nostalgie', 'Tradition', 'Esprit', 'Mystère', 'Ciel', 'Aurore', 'Crépuscule', 'Flamboyant',
+    'Cascade', 'Émerveillement', 'Renaissance', 'Rayonnement', 'Cascade', 'Éclat', 'Cascade', 'Douceur', 'Cascade', 'Cascade'
+  ];
   return texts[Math.floor(Math.random() * texts.length)];
 }
 
@@ -40,7 +69,7 @@ function generateImages() {
   const container = document.getElementById('imageContainer');
   container.innerHTML = '';
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 4; i++) {
     const color = generateRandomColor();
     const text = generateRandomText();
     const img = document.createElement('img');
