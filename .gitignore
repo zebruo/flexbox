@@ -1,0 +1,25 @@
+# Fichiers de logs
+*.log
+
+# Fichiers temporaires
+*.tmp
+
+# Fichiers système
+.DS_Store
+
+# Fichiers de cache
+/node_modules
+/packages
+
+# Fichiers compilés
+*.o
+*.pyc
+*.class
+
+# Répertoires de sortie de build
+/bin
+/out
+/target
+
+# Fichiers de configuration IDE personnels
+.idea/workspace.xml
