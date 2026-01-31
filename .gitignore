@@ -23,3 +23,6 @@
 
 # Fichiers de configuration IDE personnels
 .idea/workspace.xml
+admin/git-api.php
+admin/git-config.php
+admin/git-manager.html
