@@ -22,3 +22,32 @@ Ce script offre une interface complète pour expérimenter et comprendre les pro
    - Contrôle la direction du conteneur principal pour les petits écrans, permettant d'ajuster la mise en page responsive.
 
 Le script génère et affiche aussi le CSS et HTML résultants en temps réel, permettant à l'utilisateur de voir immédiatement les changements visuels et le code correspondant
+
+📖 Générateur Flexbox Dynamique Avancé
+Ce projet est une interface web permettant de générer et de tester des mises en page Flexbox complexes. Il permet de visualiser instantanément l'impact des propriétés CSS sur le rendu visuel et fournit le code HTML/CSS prêt à l'emploi.
+
+✨ Fonctionnalités Clés
+Contrôle du Conteneur Principal : Modifiez la direction (row, column), le wrap, l'alignement (justify-content, align-items) et la distribution du contenu.
+
+Personnalisation Individuelle des Éléments :
+
+Réglez l'ordre d'affichage (order).
+
+Gérez la flexibilité (flex-grow, flex-shrink, flex-basis).
+
+Définissez des alignements spécifiques via align-self.
+
+Gestion de Contenus Variés : Basculez entre du texte généré (Lorem Ipsum) ou des images pour tester la réactivité des blocs.
+
+Sous-conteneurs Imbriqués : Possibilité de transformer un élément en un nouveau conteneur flex pour créer des structures de mise en page avancées.
+
+Simulateur de Media Queries : Définissez un seuil de largeur (breakpoint) et changez la direction du flux pour simuler un affichage mobile.
+
+🛠️ Utilisation
+Configuration globale : Utilisez le panneau du haut pour définir le comportement général du conteneur.
+
+Génération : Choisissez le nombre d'éléments souhaités et cliquez sur "Générer les éléments".
+
+Ajustements précis : Pour chaque élément, ajustez ses propriétés spécifiques ou activez l'option "Sous-conteneur".
+
+Exportation : Copiez le code généré dans les sections CSS et HTML en bas de page pour l'utiliser dans vos propres projets.
