@@ -28,3 +28,5 @@
 admin/git-api.php
 admin/git-config.php
 admin/git-manager.html
+admin/git-clone.html
+admin/git-reset-remote.html
