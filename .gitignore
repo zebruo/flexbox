@@ -31,3 +31,9 @@ admin/git-manager.html
 admin/git-clone.html
 admin/git-reset-remote.html
 admin/git-auth.html
+git-manager/git-api.php
+git-manager/git-auth.html
+git-manager/git-clone.html
+git-manager/git-config.php
+git-manager/git-manager.html
+git-manager/git-reset-remote.html
