@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Flexbox en bref</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+header > p {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+#container {
+    display: flex;
+    border: 1px solid aquamarine;
+    gap: 10px;
+    width: 100%;
+    height: 50vh;
+    background-image: url("images/votreFenetre.svg");
+}
+#cssResult {
+    padding: 5px;
+    background-color: aquamarine;
+    width: 380px;
+}
+.box {
+    width: 500px;
+    padding: 10px;
+    background-color: rgba(160, 160, 160, 0.5); /* 50% de transparence */
+}
+form {
+    display: flex;
+    max-width: 500px;
+    align-items: center;
+    gap: 16px;
+    padding: 10px;
+    background-color: #EFEFEF;
+    border-radius: 8px;
+}
+fieldset {
+    border: none;
+    margin-bottom: 10px;
+}
+legend {
+    font-size: 1em;
+    color: #333;
+}
+input[type="radio"] {
+    margin-right: 10px;
+}
+label {
+    font-size: 1em;
+    color: #666;
+}
+</style>
+</head>
+<body>
+<header>
+    <h1 align="center">Flexbox en bref</h1>
+    <p>Un élément avec `display: flex;` devient un conteneur flexbox. Ses enfants sont des éléments flexibles. Par défaut, ils sont disposés horizontalement (`flex-direction: row;`), alignés au début (`justify-content: flex-start;`), et étirés en hauteur (`align-items: stretch;`). Ils ne grandissent pas (`flex-grow: 0;`), mais rétrécissent si nécessaire (`flex-shrink: 1;`). Leur taille de base est leur taille intrinsèque (`flex-basis: auto;`). Ces valeurs par défaut peuvent être modifiées en définissant explicitement les propriétés correspondantes sur le conteneur flex ou les éléments flexibles.</p>
+</header>
+<div id="container">
+    <div class="box" style="font-size: 15px;">
+        <p>Il était une fois, un garçon nommé Pierre. Curieux, il découvrit un arbre avec une porte. Derrière la porte, un monde magique. Des créatures fantastiques, des paysages éblouissants, des merveilles inimaginables.<br>
+            Alors que la nuit tombait, Pierre ne trouva plus la porte. Une petite créature apparut, "Ne t'inquiète pas", dit-elle. Elle le ramena à l'arbre. Pierre rentra chez lui, son monde changé à jamais.</p>
+    </div>
+    <div class="box" style="font-size: 20px;">
+        <p>Thomas naquit en <strong>1920</strong>.<br>
+            Il grandit pendant la Grande Dépression, une période difficile.<br>
+            En <strong>1940</strong>, il rencontra l’amour de sa vie, Mary.<br>
+            Ils se marièrent en <strong>1942</strong>, au cœur de la Seconde Guerre mondiale et après la guerre, en <strong>1945</strong>, ils eurent leur premier enfant.<br>
+            En <strong>1969</strong>, ils regardèrent ensemble le premier homme marcher sur la lune.<br>
+            Finalement, en <strong>2020</strong>, ils célébrèrent leur 100e anniversaire et 78 ans de mariage, entourés de leur famille aimante.<br>
+            Leur histoire est un témoignage de l’amour et de la résilience à travers les époques.</p>
+    </div>
+    <div class="box" style="font-size: 26px;">
+        <p>Dans la ville animée de <span style="font-family:'Courier New', Courier, monospace;">Retrouville</span>, un inventeur nommé <span style="font-family:'Courier New', Courier, monospace;">Max</span> créa une machine à voyager dans le temps.<br>
+            Le <span style="font-family:'Courier New', Courier, monospace;">12 mars 1965</span>, Max sauta dans sa machine et se transporta dans les années <span style="font-family:'Courier New', Courier, monospace;">1930</span>.<br>
+            Il fut émerveillé par les voitures anciennes, le swing et les chapeaux cloche. Cependant, il réalisa que malgré les différences, les gens étaient toujours les mêmes ; riant, aimant et rêvant...<br>
+            Le <span style="font-family:'Courier New', Courier, monospace;">14 mars</span>, Max retourna à <span style="font-family:'Courier New', Courier, monospace;">Retrouville</span> apportant avec lui une nouvelle appréciation du présent.</p>
+    </div>
+</div>
+<br>
+<form id="controls">
+    <fieldset>
+        <legend>flex-direction</legend>
+        <br>
+        <input type="radio" id="row" name="flex-direction" value="row" checked>
+        <label for="row">row</label>
+        <br>
+        <input type="radio" id="row-reverse" name="flex-direction" value="row-reverse">
+        <label for="row-reverse">row-reverse</label>
+        <br>
+        <input type="radio" id="column" name="flex-direction" value="column">
+        <label for="column">column</label>
+        <br>
+        <input type="radio" id="column-reverse" name="flex-direction" value="column-reverse">
+        <label for="column-reverse">column-reverse</label>
+    </fieldset>
+    <fieldset>
+        <legend>justify-content</legend>
+        <br>
+        <input type="radio" id="justify-content-flex-start" name="justify-content" value="flex-start" checked>
+        <label for="justify-content-flex-start">flex-start</label>
+        <br>
+        <input type="radio" id="justify-content-flex-end" name="justify-content" value="flex-end">
+        <label for="justify-content-flex-end">flex-end</label>
+        <br>
+        <input type="radio" id="justify-content-center" name="justify-content" value="center">
+        <label for="justify-content-center">center</label>
+        <br>
+        <input type="radio" id="justify-content-space-between" name="justify-content" value="space-between">
+        <label for="justify-content-space-between">space-between</label>
+        <br>
+        <input type="radio" id="justify-content-space-around" name="justify-content" value="space-around">
+        <label for="justify-content-space-around">space-around</label>
+        <br>
+        <input type="radio" id="justify-content-space-evenly" name="justify-content" value="space-evenly">
+        <label for="justify-content-space-evenly">space-evenly</label>
+    </fieldset>
+    <fieldset>
+        <legend>align-items</legend>
+        <br>
+        <input type="radio" id="align-items-stretch" name="align-items" value="stretch" checked>
+        <label for="align-items-stretch">stretch</label>
+        <br>
+        <input type="radio" id="align-items-flex-start" name="align-items" value="flex-start">
+        <label for="align-items-flex-start">flex-start</label>
+        <br>
+        <input type="radio" id="align-items-flex-end" name="align-items" value="flex-end">
+        <label for="align-items-flex-end">flex-end</label>
+        <br>
+        <input type="radio" id="align-items-center" name="align-items" value="center">
+        <label for="align-items-center">center</label>
+        <br>
+        <input type="radio" id="align-items-baseline" name="align-items" value="baseline">
+        <label for="align-items-baseline">baseline</label>
+    </fieldset>
+</form>
+<br>
+<!-- Ajout d'un nouvel élément div pour afficher le CSS -->
+<div id="cssResult"></div>
+<script>
+// Initialiser un objet pour stocker les valeurs des propriétés
+var cssProperties = {
+    'flex-direction': 'row',
+    'justify-content': 'flex-start',
+    'align-items': 'stretch',
+};
+
+// Initialiser le CSS affiché avec les valeurs par défaut
+var cssResult = document.getElementById('cssResult');
+cssResult.innerHTML = '<pre>#container {\n    display: flex;\n}\n\n.box {\n    width: 500px;\n    padding: 10px;\n    background-color: rgba(160, 160, 160, 0.5);\n}</pre>';
+
+document.getElementById('controls').addEventListener('change', function(e) {
+    let container = document.getElementById('container');
+    let boxes = document.getElementsByClassName('box');
+    let property = e.target.name;
+    let value = e.target.value;
+
+    // Mettre à jour le style du conteneur
+    container.style[property] = value;
+
+    // Mettre à jour la valeur de la propriété dans l'objet
+    cssProperties[property] = value;
+
+    // Si flex-direction est défini sur column ou column-reverse, ajuster la largeur de .box à 100%
+    if (cssProperties['flex-direction'] === 'column' || cssProperties['flex-direction'] === 'column-reverse') {
+        for (let i = 0; i < boxes.length; i++) {
+            boxes[i].style.width = 'auto';
+        }
+    } else {
+        for (let i = 0; i < boxes.length; i++) {
+            boxes[i].style.width = '500px';
+        }
+    }
+
+    // Mettre à jour le CSS affiché
+    let cssResultString = `#container {
+        display: flex;`;
+    
+    if (cssProperties['flex-direction'] !== 'row') {
+        cssResultString += `
+        flex-direction: ${cssProperties['flex-direction']};`;
+    }
+
+    if (cssProperties['justify-content'] !== 'flex-start') {
+        cssResultString += `
+        justify-content: ${cssProperties['justify-content']};`;
+    }
+
+    if (cssProperties['align-items'] !== 'stretch') {
+        cssResultString += `
+        align-items: ${cssProperties['align-items']};`;
+    }
+
+    cssResultString += `
+    }
+
+    .box {
+        width: ${cssProperties['flex-direction'] === 'column' || cssProperties['flex-direction'] === 'column-reverse' ? 'auto' : '500px'};
+        padding: 10px;
+        background-color: rgba(160, 160, 160, 0.5);
+    }`;
+
+    cssResult.innerHTML = '<pre>' + cssResultString + '</pre>';
+});
+
+
+</script>
+</body>
+</html>
