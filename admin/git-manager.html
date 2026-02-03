@@ -1,0 +1,2787 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestion Git Avec Interface Graphique</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'><path fill='%2345b7af' d='M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z'/></svg>" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Variables CSS - Thème clair */
+    :root {
+      --bg-color: #fdfdfd;
+      --bg-primary: #f0f2f5;
+      --bg-secondary: #becddd;
+      --text-primary: #1c3641;
+      --text-secondary: #6c757d;
+      --border-color: #b0b9c2;
+      --accent-color: #45b7af;
+      --accent-hover: #3ca29a;
+    }
+
+    /* Variables CSS - Thème sombre */
+    .dark-mode {
+      --bg-color: #1e293b;
+      --bg-primary: #1e293b;
+      --bg-secondary: #293d58;
+      --text-primary: #ffffff;
+      --text-secondary: #94a3b8;
+      --border-color: #3d4f5f;
+      --accent-color: #45b7af;
+      --accent-hover: #3ca29a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .git-container {
+      max-width: 1400px;
+      margin: 5px auto;
+    }
+
+    .git-header {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 10px 30px 10px 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .git-header-content h1 {
+      margin: 0 0 10px 0;
+      color: var(--text-primary);
+      font-size: 2em;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .git-header-content h1 i {
+      color: var(--accent-color);
+    }
+
+    .git-header-content p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 1.1em;
+    }
+
+    .repo-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .repo-info a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .repo-info a:hover {
+      text-decoration: underline;
+    }
+
+    .repo-info .repo-icon {
+      color: var(--text-secondary);
+    }
+
+    .git-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+    }
+
+    .git-section {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      flex: 1 1 calc(33.333% - 17px);
+      min-width: 300px;
+      box-sizing: border-box;
+    }
+
+    .git-section.full-width {
+      flex: 1 1 100%;
+    }
+
+    @media (max-width: 1200px) {
+      .git-section {
+        flex: 1 1 calc(50% - 13px);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .git-section {
+        flex: 1 1 100%;
+      }
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-content h3 {
+      margin: 0 0 15px 0;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-content h3 i {
+      color: var(--accent-color);
+    }
+
+    .modal-content p {
+      margin: 0 0 25px 0;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .modal-content.modal-large {
+      max-width: 900px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .modal-header h3 {
+      margin: 0;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .git-section h2 {
+      margin: 0 0 20px 0;
+      color: var(--text-primary);
+      font-size: 1.4em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .git-section h2 i {
+      color: var(--accent-color);
+    }
+
+    .status-info {
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .status-row:last-child {
+      border-bottom: none;
+    }
+
+    .status-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .status-value {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .status-value.branch {
+      color: var(--accent-color);
+    }
+
+    .file-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.2s;
+    }
+
+    .file-item:last-child {
+      border-bottom: none;
+    }
+
+    .file-item:hover {
+      background: var(--bg-primary);
+    }
+
+    .file-item input[type="checkbox"] {
+      margin-right: 12px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .file-item .file-status {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .file-status.modified {
+      background: #ffd700;
+      color: #333;
+    }
+
+    .file-status.added {
+      background: #4caf50;
+      color: white;
+    }
+
+    .file-status.deleted {
+      background: #f44336;
+      color: white;
+    }
+
+    .file-status.untracked {
+      background: #9e9e9e;
+      color: white;
+    }
+
+    .file-name {
+      flex: 1;
+      color: var(--text-primary);
+      font-family: monospace;
+      font-size: 0.95em;
+    }
+
+    .commit-form {
+      margin-top: 15px;
+    }
+
+    .commit-form textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 1em;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    .commit-form textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #d32f2f;
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: #4caf50;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #388e3c;
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .history-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .commit-item {
+      padding: 15px;
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.2s;
+    }
+
+    .commit-item:hover {
+      background: var(--bg-primary);
+    }
+
+    .commit-item:last-child {
+      border-bottom: none;
+    }
+
+    .commit-hash {
+      font-family: monospace;
+      font-size: 0.85em;
+      color: var(--accent-color);
+      background: var(--bg-primary);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    .commit-message {
+      color: var(--text-primary);
+      font-weight: 500;
+      margin: 8px 0;
+    }
+
+    .commit-meta {
+      font-size: 0.85em;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .commit-meta i {
+      margin-right: 5px;
+    }
+
+    .terminal-output {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.9em;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .terminal-output .success {
+      color: #4caf50;
+    }
+
+    .terminal-output .error {
+      color: #f44336;
+    }
+
+    .terminal-output .info {
+      color: #2196f3;
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      color: var(--text-secondary);
+    }
+
+    .loading i {
+      font-size: 2em;
+      animation: spin 1s linear infinite;
+      margin-right: 15px;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .select-all-row {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      background: var(--bg-primary);
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .select-all-row input[type="checkbox"] {
+      margin-right: 12px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .select-all-row label {
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state i {
+      font-size: 3em;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    .checkout-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid var(--border-color);
+    }
+
+    .checkout-section h3 {
+      margin: 0 0 15px 0;
+      color: var(--text-primary);
+      font-size: 1.1em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkout-section h3 i {
+      color: var(--accent-color);
+    }
+
+    .file-select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 1em;
+      margin-bottom: 10px;
+    }
+
+    .file-select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .alert {
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .alert-success {
+      background: rgba(76, 175, 80, 0.1);
+      border: 1px solid #4caf50;
+      color: #4caf50;
+    }
+
+    .alert-error {
+      background: rgba(244, 67, 54, 0.1);
+      border: 1px solid #f44336;
+      color: #f44336;
+    }
+
+    .alert-info {
+      background: rgba(33, 150, 243, 0.1);
+      border: 1px solid #2196f3;
+      color: #2196f3;
+    }
+
+    .alert-warning {
+      background: rgba(255, 152, 0, 0.1);
+      border: 1px solid #ff9800;
+      color: #ff9800;
+    }
+
+    .alert code {
+      background: rgba(0, 0, 0, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    /* Aide et Légendes */
+    .help-content {
+      color: var(--text-primary);
+    }
+
+    .help-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin-bottom: 25px;
+    }
+
+    .help-category {
+      background: var(--bg-color);
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      flex: 1 1 calc(33.333% - 17px);
+      min-width: 280px;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 1200px) {
+      .help-category {
+        flex: 1 1 calc(50% - 13px);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .help-category {
+        flex: 1 1 100%;
+      }
+    }
+
+    .help-category h4 {
+      margin: 0 0 15px 0;
+      color: var(--accent-color);
+      font-size: 1.1em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .help-category dl {
+      margin: 0;
+    }
+
+    .help-category dt {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .help-category dt:first-of-type {
+      margin-top: 0;
+    }
+
+    .help-category dd {
+      margin: 5px 0 0 0;
+      color: var(--text-secondary);
+      font-size: 0.9em;
+      line-height: 1.4;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .status-badge.modified {
+      background: #ffd700;
+      color: #333;
+    }
+
+    .status-badge.added {
+      background: #4caf50;
+      color: white;
+    }
+
+    .status-badge.untracked {
+      background: #9e9e9e;
+      color: white;
+    }
+
+    .status-badge.deleted {
+      background: #f44336;
+      color: white;
+    }
+
+    .help-workflow {
+      background: var(--bg-color);
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .help-workflow h4 {
+      margin: 0 0 15px 0;
+      color: var(--accent-color);
+      font-size: 1.1em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .help-workflow ol {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text-secondary);
+    }
+
+    .help-workflow li {
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .help-workflow li:last-child {
+      margin-bottom: 0;
+    }
+
+    .help-workflow strong {
+      color: var(--text-primary);
+    }
+
+    /* Gitignore styles */
+    .gitignore-list {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    .gitignore-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+      border-bottom: 1px solid var(--border-color);
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+
+    .gitignore-item:last-child {
+      border-bottom: none;
+    }
+
+    .gitignore-item:hover {
+      background: var(--bg-primary);
+    }
+
+    .gitignore-item .pattern {
+      color: var(--text-primary);
+    }
+
+    .gitignore-item .remove-btn {
+      background: none;
+      border: none;
+      color: #f44336;
+      cursor: pointer;
+      padding: 5px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .gitignore-item .remove-btn:hover {
+      opacity: 1;
+    }
+
+    .gitignore-empty {
+      padding: 20px;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    /* Branches */
+    .branch-list {
+      max-height: 250px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .branch-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.2s;
+    }
+
+    .branch-item:last-child {
+      border-bottom: none;
+    }
+
+    .branch-item:hover {
+      background: var(--bg-secondary);
+    }
+
+    .branch-item.current {
+      background: rgba(69, 183, 175, 0.1);
+      border-left: 3px solid var(--accent-color);
+    }
+
+    .branch-info {
+      display: grid;
+      grid-template-columns: minmax(10px, 1fr) auto auto auto;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .branch-name {
+      font-family: monospace;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .branch-name.current {
+      color: var(--accent-color);
+    }
+
+    .branch-badge {
+      font-size: 0.75em;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--accent-color);
+      color: white;
+      min-width: 55px;
+      text-align: center;
+    }
+
+    .branch-badge.hidden {
+      visibility: hidden;
+    }
+
+    .branch-tracking {
+      font-size: 0.8em;
+      color: var(--text-secondary);
+      min-width: 50px;
+    }
+
+    .branch-tracking .ahead {
+      color: #4caf50;
+    }
+
+    .branch-tracking .behind {
+      color: #ff9800;
+    }
+
+    .branch-actions {
+      display: flex;
+      /*gap: 5px;*/
+    }
+
+    .branch-actions button {
+      padding: 5px 10px;
+      font-size: 0.85em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .branch-actions .switch-btn {
+      background: #45b7af00;
+      color: #45b7af;
+    }
+
+    .branch-actions .switch-btn:hover {
+      background: #45b7af40;
+    }
+
+    .branch-actions .merge-btn {
+      background: #2195f300;
+      color: #2196f3;
+    }
+
+    .branch-actions .merge-btn:hover {
+      background: #1976d240;
+    }
+
+    .branch-actions .delete-btn {
+      background: #f4433600;
+      color: #f44336;
+    }
+
+    .branch-actions .delete-btn:hover {
+      background: #d32f2f40;
+    }
+
+    .branch-actions .publish-btn {
+      background: #9c27b000;
+      color: #9c27b0;
+    }
+
+    .branch-actions .publish-btn:hover {
+      background: #7b1fa240;
+    }
+
+    .branch-actions .rename-btn {
+      background: #ff990000;
+      color: #ff9800;
+    }
+
+    .branch-actions .rename-btn:hover {
+      background: #f57c0040;
+    }
+
+    .branch-badge.local-only {
+      background: #9c27b0;
+      font-size: 0.7em;
+    }
+
+    .branch-badge.tracked {
+      background: #2196f3;
+      font-size: 0.7em;
+    }
+
+    .branch-badge.remote-only {
+      background: #607d8b;
+      font-size: 0.7em;
+    }
+
+    .branch-section-title {
+      font-size: 0.9em;
+      color: var(--text-secondary);
+      margin: 15px 0 10px 0;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .create-branch-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .create-branch-form input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 0.95em;
+    }
+
+    .create-branch-form input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .create-branch-form input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    /* ========================================
+    SCROLLBAR
+    ======================================== */
+    /* WebKit */
+    ::-webkit-scrollbar {
+      width: 4px; /* encore plus fin */
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(120, 120, 120, 0.4);
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(120, 120, 120, 0.6);
+    }
+
+    /* Firefox */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(120, 120, 120, 0.4) transparent;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="git-container">
+    <div class="git-header">
+      <div class="git-header-content">
+        <h1><i class="fab fa-git-alt"></i> Gestion Git</h1>
+        <p id="repoInfo" class="repo-info">
+          <i class="fas fa-spinner fa-spin"></i> Chargement...
+        </p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <a href="git-clone.html" class="btn btn-secondary" title="Cloner un dépôt">
+          <i class="fas fa-clone"></i>
+        </a>
+        <button class="btn btn-secondary" onclick="showRemoteForm()" id="remoteBtn" title="Configurer GitHub" style="display: none;">
+          <i class="fas fa-link"></i>
+        </button>
+        <a href="git-reset-remote.html" class="btn btn-secondary" id="resetRemoteBtn" title="Réinitialiser le dépôt distant" style="display: none;">
+          <i class="fas fa-eraser"></i>
+        </a>
+        <a href="git-auth.html" class="btn btn-secondary" title="Authentification SSH / Token">
+          <i class="fas fa-key"></i>
+        </a>
+        <button class="btn btn-secondary" onclick="showHelpModal()" title="Aide">
+          <i class="fas fa-question-circle"></i>
+        </button>
+        <button class="btn btn-secondary" onclick="toggleDarkMode()" id="darkModeBtn" title="Mode sombre">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="btn btn-primary" onclick="refreshAll()" id="refreshAllBtn" title="Actualiser tout">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="alertContainer"></div>
+
+    <!-- Section d'initialisation (quand pas de dépôt Git) -->
+    <div id="initSection" class="git-section full-width" style="display: none;">
+      <h2><i class="fas fa-folder-plus"></i> Initialiser un dépôt Git</h2>
+      <div class="empty-state">
+        <i class="fas fa-exclamation-circle" style="color: var(--accent-color);"></i>
+        <p>Ce dossier n'est pas encore un dépôt Git.</p>
+        <p style="color: var(--text-secondary); font-size: 0.9em;" id="initPath"></p>
+        <div class="btn-group" style="justify-content: center; margin-top: 20px;">
+          <button class="btn btn-primary" onclick="initRepo()">
+            <i class="fas fa-plus"></i> Initialiser le dépôt (git init)
+          </button>
+          <a href="git-clone.html" class="btn btn-secondary">
+            <i class="fas fa-clone"></i> Cloner un dépôt existant
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de confirmation (en dehors de mainContent pour être toujours accessible) -->
+    <div class="modal-overlay" id="confirmModal">
+      <div class="modal-content">
+        <h3><i class="fas fa-question-circle"></i> Confirmation</h3>
+        <p id="confirmModalMessage">Êtes-vous sûr ?</p>
+        <div class="modal-buttons">
+          <button class="btn btn-secondary" onclick="closeModal(false)" id="cancelModalBtn">Annuler</button>
+          <button class="btn btn-danger" onclick="closeModal(true)" id="confirmModalBtn">Confirmer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal d'aide -->
+    <div class="modal-overlay" id="helpModal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h3><i class="fas fa-question-circle"></i> Aide et Légendes</h3>
+          <button class="btn btn-secondary" onclick="closeHelpModal()" style="padding: 5px 10px;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="help-content">
+          <div class="help-grid">
+            <div class="help-category">
+              <h4><i class="fas fa-cloud"></i> Synchronisation</h4>
+              <dl>
+                <dt><i class="fas fa-link"></i> Remote (origin)</dt>
+                <dd>L'adresse du dépôt distant (GitHub). Lie votre dépôt local à GitHub pour synchroniser vos fichiers. Sans remote, pas de Push/Pull possible.</dd>
+                <dt><i class="fas fa-upload"></i> Push</dt>
+                <dd>Envoie vos commits locaux vers GitHub. Vos modifications deviennent visibles pour tous.</dd>
+                <dt><i class="fas fa-download"></i> Pull</dt>
+                <dd>Récupère les dernières modifications depuis GitHub et les fusionne avec votre code local.</dd>
+                <dt><i class="fas fa-sync"></i> Fetch</dt>
+                <dd>Vérifie s'il y a des nouveautés sur GitHub sans modifier vos fichiers locaux.</dd>
+              </dl>
+            </div>
+            <div class="help-category">
+              <h4><i class="fas fa-file-alt"></i> Statuts des fichiers</h4>
+              <dl>
+                <dt><span class="status-badge modified">M</span> Modifié</dt>
+                <dd>Fichier suivi par Git qui a été modifié depuis le dernier commit.</dd>
+                <dt><span class="status-badge added">A</span> Ajouté</dt>
+                <dd>Nouveau fichier prêt à être inclus dans le prochain commit.</dd>
+                <dt><span class="status-badge deleted">D</span> Supprimé</dt>
+                <dd>Fichier marqué pour suppression du dépôt.</dd>
+                <dt><span class="status-badge untracked">?</span> Non suivi</dt>
+                <dd>Fichier non encore ajouté au suivi Git.</dd>
+              </dl>
+            </div>
+            <div class="help-category">
+              <h4><i class="fas fa-undo"></i> Récupération</h4>
+              <dl>
+                <dt>HEAD</dt>
+                <dd>La version actuelle (dernier commit).</dd>
+                <dt>HEAD~1</dt>
+                <dd>La version du commit précédent.</dd>
+                <dt>HEAD~2</dt>
+                <dd>La version d'il y a 2 commits.</dd>
+                <dt>origin/main</dt>
+                <dd>La version sur GitHub (serveur distant).</dd>
+              </dl>
+            </div>
+            <div class="help-category">
+              <h4><i class="fas fa-arrows-alt-v"></i> Avance / Retard</h4>
+              <dl>
+                <dt><span class="ahead">↑</span> Commits en avance</dt>
+                <dd>Commits locaux non encore envoyés sur GitHub. → Faire un <strong>Push</strong></dd>
+                <dt><span class="behind">↓</span> Commits en retard</dt>
+                <dd>Commits sur GitHub non encore récupérés. → Faire un <strong>Pull</strong></dd>
+              </dl>
+              <div style="margin-top: 15px; font-size: 0.85em; font-family: monospace; background: var(--bg-secondary); padding: 10px; border-radius: 6px;">
+                <div style="margin-bottom: 8px;"><strong>ex. 2 en avance :</strong></div>
+                <div>PC: A→B→C→<span class="ahead">D→E</span></div>
+                <div>GitHub: A→B→C</div>
+                <div style="margin-top: 10px; margin-bottom: 8px;"><strong>ex. 2 en retard :</strong></div>
+                <div>PC: A→B→C</div>
+                <div>GitHub: A→B→C→<span class="behind">D→E</span></div>
+                <div style="margin-top: 10px; margin-bottom: 8px;"><strong>ex. Cas mixte (après un fetch ↑1 ↓2) :</strong></div>
+                <div>PC: A→B→C→<span class="ahead">X</span></div>
+                <div>GitHub: A→B→C→<span class="behind">Y→Z</span></div>
+                <div style="margin-top: 5px; font-style: italic;">→ Pull puis Push</div>
+              </div>
+            </div>
+            <div class="help-category">
+              <h4><i class="fas fa-exclamation-triangle"></i> Actions dangereuses</h4>
+              <dl>
+                <dt><i class="fas fa-trash"></i> Annuler toutes les modifications</dt>
+                <dd>Supprime TOUTES les modifications non committées. <strong>Irréversible !</strong></dd>
+                <dt><i class="fas fa-trash-alt"></i> Supprimer (dépôt + disque)</dt>
+                <dd>Supprime le fichier du dépôt ET de votre disque. <strong>Définitif !</strong></dd>
+                <dt><i class="fas fa-eye-slash"></i> Arrêter le suivi</dt>
+                <dd>Retire le fichier du dépôt mais le conserve sur le disque.</dd>
+              </dl>
+            </div>
+            <div class="help-category">
+              <h4><i class="fas fa-code-branch"></i> Fusionner (Merge)</h4>
+              <dl>
+                <dt><i class="fas fa-code-branch" style="color: #2196f3;"></i> Bouton Fusionner</dt>
+                <dd>Le bouton bleu <i class="fas fa-code-branch"></i> apparaît à côté des branches qui ne sont pas la branche courante.</dd>
+                <dt>Que fait le merge ?</dt>
+                <dd>Il intègre les commits de la branche sélectionnée <strong>dans</strong> la branche courante.</dd>
+              </dl>
+              <div style="margin-top: 15px; font-size: 0.85em; background: var(--bg-secondary); padding: 10px; border-radius: 6px;">
+                <div style="margin-bottom: 8px;"><strong>Exemple :</strong></div>
+                <div>Vous êtes sur <span class="ahead">main</span></div>
+                <div>Vous cliquez <i class="fas fa-code-branch" style="color: #2196f3;"></i> sur <span class="behind">feature</span></div>
+                <div style="margin-top: 5px;">→ Les commits de <em>feature</em> sont ajoutés à <em>main</em></div>
+                <div style="margin-top: 10px; font-style: italic;">Workflow : Basculer sur main → Merge de feature → Push</div>
+              </div>
+              <dl style="margin-top: 15px;">
+                <dt><i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i> Conflits de fusion</dt>
+                <dd>Si le même fichier a été modifié sur les deux branches :</dd>
+              </dl>
+              <div style="margin-top: 10px; font-size: 0.85em; background: var(--bg-secondary); padding: 10px; border-radius: 6px;">
+                <div><strong>Lignes différentes</strong> → Git fusionne automatiquement</div>
+                <div style="margin-top: 8px;"><strong>Mêmes lignes</strong> → <span style="color: #ff9800;">Conflit !</span> Git marque le fichier :</div>
+                <div style="margin-top: 5px; font-family: monospace; background: var(--bg-color); padding: 8px; border-radius: 4px; font-size: 0.9em;">
+                  &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br>
+                  Code sur main<br>
+                  =======<br>
+                  Code sur feature<br>
+                  &gt;&gt;&gt;&gt;&gt;&gt;&gt; feature
+                </div>
+                <div style="margin-top: 8px;"><strong>Résolution :</strong></div>
+                <div>1. Ouvrir le fichier et choisir quelle version garder</div>
+                <div>2. Supprimer les marqueurs &lt;&lt;&lt;, ===, &gt;&gt;&gt;</div>
+                <div>3. Sauvegarder → Commit</div>
+              </div>
+            </div>
+            <div class="help-category">
+              <h4><i class="fas fa-code-branch"></i> Fork (contribution)</h4>
+              <dl>
+                <dt>Qu'est-ce qu'un fork ?</dt>
+                <dd>Une copie d'un dépôt GitHub vers votre propre compte. Permet de contribuer à un projet sans avoir les droits d'écriture ou créer votre propre version, le fork devient votre point de départ indépendant.</dd>
+              </dl>
+              <div style="margin-top: 15px; font-size: 0.85em; font-family: monospace; background: var(--bg-secondary); padding: 12px; border-radius: 6px; text-align: center;">
+                <div style="color: var(--text-secondary);">Dépôt original (autre utilisateur)</div>
+                <div style="color: var(--accent-color); margin: 5px 0;">↓ <span style="font-size: 0.8em;">Fork (sur GitHub)</span></div>
+                <div style="color: var(--text-primary);">Votre fork (votre compte GitHub)</div>
+                <div style="color: var(--accent-color); margin: 5px 0;">↓ <span style="font-size: 0.8em;">Clone</span></div>
+                <div style="color: var(--text-primary);">Votre PC (travail local)</div>
+                <div style="color: var(--accent-color); margin: 5px 0;">↓ <span style="font-size: 0.8em;">Push</span></div>
+                <div style="color: var(--text-primary);">Votre fork</div>
+                <div style="color: var(--accent-color); margin: 5px 0;">↓ <span style="font-size: 0.8em;">Pull Request</span></div>
+                <div style="color: var(--text-secondary);">Dépôt original (proposition)</div>
+              </div>
+              <div style="margin-top: 10px; font-size: 0.85em; color: var(--text-secondary);">
+                <i class="fas fa-info-circle"></i> Le fork se fait sur GitHub.com (bouton "Fork"). Utilisez ensuite <a href="git-clone.html" style="color: var(--accent-color);">Cloner un dépôt</a> pour récupérer votre fork.
+              </div>
+            </div>
+            <div class="help-category">
+              <h4><i class="fas fa-code-branch"></i> Gestion des branches</h4>
+              <dl>
+                <dt><i class="fas fa-download"></i> Récupérer une branche distante</dt>
+                <dd>Cliquer sur une branche distante crée automatiquement une branche locale qui suit la branche distante.</dd>
+                <dt><i class="fas fa-trash"></i> Supprimer une branche distante</dt>
+                <dd>Le bouton poubelle à côté des branches distantes permet de les supprimer directement sur GitHub.</dd>
+                <dt><i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i> Forcer le basculement</dt>
+                <dd>Si des fichiers non suivis bloquent le changement de branche, une option "Forcer" est proposée. <strong>Attention :</strong> les fichiers en conflit seront écrasés.</dd>
+              </dl>
+              <div style="margin-top: 15px; font-size: 0.85em; background: var(--bg-secondary); padding: 10px; border-radius: 6px;">
+                <div style="margin-bottom: 8px;"><strong>Créer une branche :</strong></div>
+                <table style="width: 100%; font-size: 0.95em; border-collapse: collapse;">
+                  <tr>
+                    <td style="padding: 4px 8px;"><strong>Branche actuelle</strong></td>
+                    <td style="padding: 4px 8px; color: var(--text-secondary);">Copie avec historique</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 8px;">🆕 <strong>Branche vide</strong></td>
+                    <td style="padding: 4px 8px; color: var(--text-secondary);">Sans fichiers, sans historique</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 8px;">🔄 <strong>Nouveau départ</strong></td>
+                    <td style="padding: 4px 8px; color: var(--text-secondary);">Fichiers actuels, sans historique</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 8px;"><strong>Autre branche</strong></td>
+                    <td style="padding: 4px 8px; color: var(--text-secondary);">Copie d'une branche spécifique</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="help-category">
+              <h4><i class="fas fa-clone"></i> Cloner un dépôt</h4>
+              <dl>
+                <dt><a href="git-clone.html" style="color: var(--accent-color);">Page de clonage</a></dt>
+                <dd>Permet de cloner un dépôt GitHub existant vers votre machine. Les fichiers Git Manager sont automatiquement copiés dans le nouveau dépôt.</dd>
+              </dl>
+              <div style="margin-top: 10px; font-size: 0.85em; background: var(--bg-secondary); padding: 10px; border-radius: 6px;">
+                <div><strong>Fichiers copiés :</strong></div>
+                <div style="margin-top: 5px;">git-manager.html, git-api.php, git-config.php, git-clone.html, git-reset-remote.html, git-auth.html</div>
+              </div>
+            </div>
+            <div class="help-category">
+              <h4><i class="fas fa-eraser"></i> Réinitialiser le dépôt distant</h4>
+              <dl>
+                <dt><a href="git-reset-remote.html" style="color: var(--accent-color);">Page de réinitialisation</a></dt>
+                <dd>Crée une nouvelle branche vide (sans historique) et supprime les branches sélectionnées sur GitHub. <strong>Irréversible !</strong></dd>
+              </dl>
+
+              <h4><i class="fas fa-key"></i> Authentification (SSH / Token)</h4>
+              <dl>
+                <dt><a href="git-auth.html" style="color: var(--accent-color);">Guide d'authentification</a></dt>
+                <dd>Configure l'accès à GitHub via SSH (clés) ou Token HTTPS. Nécessaire pour push/pull.</dd>
+              </dl>
+              <div style="margin-top: 10px; font-size: 0.85em; background: var(--bg-secondary); padding: 10px; border-radius: 6px;">
+                <div><strong>Cas d'usage :</strong></div>
+                <ul style="margin: 5px 0 0 15px; padding: 0;">
+                  <li>Nettoyer un dépôt contenant des fichiers sensibles dans l'historique</li>
+                  <li>Repartir de zéro sans supprimer/recréer le dépôt GitHub</li>
+                  <li>Supprimer des branches obsolètes en masse</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="help-workflow">
+            <h4><i class="fas fa-project-diagram"></i> Workflow typique</h4>
+            <ol>
+              <li><strong>Modifier</strong> vos fichiers</li>
+              <li><strong>Sélectionner</strong> les fichiers à committer</li>
+              <li><strong>Écrire</strong> un message décrivant les changements</li>
+              <li><strong>Commit</strong> pour enregistrer localement</li>
+              <li><strong>Push</strong> pour envoyer sur GitHub</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenu principal (quand dépôt Git existe) -->
+    <div id="mainContent">
+    <div class="git-layout">
+      <!-- Status Section -->
+      <div class="git-section">
+        <h2>
+          <i class="fas fa-info-circle"></i> Statut du dépôt
+        </h2>
+        <div id="statusContent">
+          <div class="loading">
+            <i class="fas fa-spinner"></i> Chargement...
+          </div>
+        </div>
+      </div>
+
+      <!-- Branches Section -->
+      <div class="git-section">
+        <h2>
+          <i class="fas fa-code-branch"></i> Branches
+        </h2>
+        <div id="branchesContent">
+          <div class="loading">
+            <i class="fas fa-spinner"></i> Chargement...
+          </div>
+        </div>
+        <div class="create-branch-form" style="flex-wrap: wrap;">
+          <select id="sourceBranchSelect" class="file-select" style="min-width: 150px;" title="Branche source (optionnel)">
+            <option value="">Depuis: branche actuelle</option>
+            <option value="__orphan__">🆕 Branche vide (sans fichiers, sans historique)</option>
+            <option value="__freshstart__">🔄 Nouveau départ (fichiers actuels, sans historique)</option>
+          </select>
+          <input type="text" id="newBranchName" placeholder="Nom de la nouvelle branche" style="flex: 1;">
+          <button class="btn btn-primary" onclick="createBranch()">
+            <i class="fas fa-plus"></i> Créer
+          </button>
+        </div>
+      </div>
+
+      <!-- Gitignore Section -->
+      <div class="git-section">
+        <h2>
+          <i class="fas fa-eye-slash"></i> Fichiers ignorés (.gitignore)
+        </h2>
+        <div class="gitignore-content">
+          <div class="gitignore-add">
+            <label style="color:var(--text-secondary);font-size:0.9em;margin-bottom:5px;display:block;">Ajouter un fichier/dossier à ignorer :</label>
+            <div style="display:flex;gap:10px;">
+              <select id="untrackedFiles" class="file-select" style="flex:1;margin-bottom:0;">
+                <option value="">-- Fichiers non suivis --</option>
+              </select>
+              <button class="btn btn-secondary" onclick="addToGitignore()" style="white-space:nowrap;">
+                <i class="fas fa-plus"></i> Ignorer
+              </button>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:10px;">
+              <input type="text" id="customIgnore" class="file-select" style="flex:1;margin-bottom:0;" placeholder="Ou saisir manuellement (ex: *.log, temp/)">
+              <button class="btn btn-secondary" onclick="addCustomToGitignore()" style="white-space:nowrap;">
+                <i class="fas fa-plus"></i> Ajouter
+              </button>
+            </div>
+          </div>
+          <div class="gitignore-list" id="gitignoreList" style="margin-top:15px;">
+            <div class="loading">
+              <i class="fas fa-spinner"></i> Chargement...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Commit Section -->
+      <div class="git-section">
+        <h2><i class="fas fa-code-commit"></i> Nouveau Commit</h2>
+        <div id="commitSection">
+          <div class="file-list" id="fileList">
+            <div class="loading">
+              <i class="fas fa-spinner"></i> Chargement des fichiers...
+            </div>
+          </div>
+          <div class="commit-form">
+            <div class="btn-group" style="margin-bottom: 10px;">
+              <button class="btn btn-secondary" onclick="stageFiles()" title="Ajouter les fichiers sélectionnés au staging">
+                <i class="fas fa-plus-circle"></i> Stager
+              </button>
+              <button class="btn btn-secondary" onclick="unstageFiles()" title="Retirer les fichiers sélectionnés du staging">
+                <i class="fas fa-minus-circle"></i> Unstager
+              </button>
+            </div>
+            <textarea id="commitMessage" placeholder="Message du commit..."></textarea>
+            <div class="btn-group">
+              <button class="btn btn-primary" onclick="doCommit()" id="commitBtn">
+                <i class="fas fa-check"></i> Commit
+              </button>
+              <button class="btn btn-success" onclick="doCommitAndPush()" id="commitPushBtn">
+                <i class="fas fa-upload"></i> Commit & Push
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Push/Pull Section -->
+      <div class="git-section">
+        <h2><i class="fas fa-cloud-upload-alt"></i> Synchronisation</h2>
+        <div class="btn-group">
+          <button class="btn btn-success" onclick="doPush()">
+            <i class="fas fa-upload"></i> Push
+          </button>
+          <button class="btn btn-primary" onclick="doPull()">
+            <i class="fas fa-download"></i> Pull
+          </button>
+          <button class="btn btn-secondary" onclick="doFetch()">
+            <i class="fas fa-sync"></i> Fetch
+          </button>
+        </div>
+        <div class="checkout-section">
+          <h3><i class="fas fa-undo"></i> Récupérer un fichier</h3>
+          <select id="checkoutFileSelect" class="file-select" onchange="loadFileCommits()">
+            <option value="">-- Sélectionner un fichier --</option>
+          </select>
+          <select id="checkoutSource" class="file-select">
+            <option value="HEAD">HEAD (dernier commit)</option>
+            <option value="HEAD~1">HEAD~1 (commit précédent)</option>
+            <option value="HEAD~2">HEAD~2 (2 commits avant)</option>
+            <option value="origin/main">origin/main (distant)</option>
+          </select>
+          <div id="fileCommitsContainer" style="display:none; margin-bottom:10px;">
+            <label style="color:var(--text-secondary);font-size:0.9em;margin-bottom:5px;display:block;">Ou choisir un commit spécifique :</label>
+            <select id="fileCommitsSelect" class="file-select">
+              <option value="">-- Commits pour ce fichier --</option>
+            </select>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="doCheckout()">
+              <i class="fas fa-undo"></i> Récupérer
+            </button>
+            <button class="btn btn-danger" onclick="doDiscardAll()">
+              <i class="fas fa-trash"></i> Annuler toutes les modifications
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete from repo Section -->
+      <div class="git-section">
+        <h2><i class="fas fa-trash-alt"></i> Supprimer un fichier du dépôt</h2>
+        <select id="deleteFileSelect" class="file-select">
+          <option value="">-- Sélectionner un fichier suivi --</option>
+        </select>
+        <div class="btn-group">
+          <button class="btn btn-danger" onclick="doRemoveFromRepo()">
+            <i class="fas fa-trash"></i> Supprimer (dépôt + disque)
+          </button>
+          <button class="btn btn-secondary" onclick="doUntrackFile()">
+            <i class="fas fa-eye-slash"></i> Arrêter le suivi uniquement
+          </button>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.85em; margin-top: 10px;">
+          <i class="fas fa-info-circle"></i>
+          <strong>Supprimer</strong> : supprime le fichier du dépôt ET de votre disque.<br>
+          <strong>Arrêter le suivi</strong> : retire le fichier du dépôt mais le conserve localement.<br>
+          <em>Après l'action : sélectionnez le fichier <strong>D</strong> et faites <strong>Commit & Push</strong>.<br>
+          Le fichier réapparaîtra en <strong>?</strong> (normal : il existe encore sur votre disque). Ajoutez-le au .gitignore si vous ne voulez plus le voir.</em>
+        </p>
+      </div>
+
+      <!-- History Section -->
+      <div class="git-section">
+        <h2>
+          <i class="fas fa-history"></i> Historique des commits
+        </h2>
+        <div class="history-list" id="historyList">
+          <div class="loading">
+            <i class="fas fa-spinner"></i> Chargement...
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Output -->
+      <div class="git-section">
+        <h2><i class="fas fa-terminal"></i> Sortie Terminal</h2>
+        <div class="terminal-output" id="terminalOutput">
+          <span class="info">$ Prêt pour les commandes Git...</span>
+        </div>
+      </div>
+
+    </div>
+    </div> <!-- Fin mainContent -->
+  </div>
+
+  <script>
+    const API_URL = 'git-api.php';
+    let modalResolve = null;
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Charger le mode sombre sauvegardé
+      if (localStorage.getItem('gitManagerDarkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        updateDarkModeIcon();
+      }
+
+      // Vérifier si c'est un dépôt Git
+      const repoCheck = await checkRepo();
+      if (repoCheck.isGitRepo) {
+        document.getElementById('initSection').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        loadRepoInfo();
+        refreshAll();
+      } else {
+        document.getElementById('initSection').style.display = 'block';
+        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('initPath').textContent = repoCheck.path;
+        document.getElementById('repoInfo').innerHTML = '<i class="fas fa-folder"></i> ' + repoCheck.path;
+      }
+    });
+
+    // Vérifier si le dossier est un dépôt Git
+    async function checkRepo() {
+      const result = await apiCall('checkRepo');
+      if (result.success) {
+        return result.data;
+      }
+      return { isGitRepo: false, path: '' };
+    }
+
+    // Initialiser un nouveau dépôt Git
+    async function initRepo() {
+      const confirmed = await showConfirm('Initialiser un nouveau dépôt Git dans ce dossier ?');
+      if (!confirmed) return;
+
+      const result = await apiCall('init');
+
+      if (result.success) {
+        showAlert('success', result.output);
+        // Recharger la page pour afficher l'interface complète
+        setTimeout(() => location.reload(), 1000);
+      } else {
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Charger les informations du dépôt
+    async function loadRepoInfo() {
+      const repoInfo = document.getElementById('repoInfo');
+      const remoteBtn = document.getElementById('remoteBtn');
+      const resetRemoteBtn = document.getElementById('resetRemoteBtn');
+      const result = await apiCall('repoInfo');
+
+      if (result.success && result.data) {
+        // Afficher le bouton remote dans le header
+        remoteBtn.style.display = 'inline-flex';
+
+        if (result.data.hasRemote && result.data.name && result.data.url) {
+          const githubUrl = result.data.url.replace(/\.git$/, '').replace('git@github.com:', 'https://github.com/');
+          repoInfo.innerHTML = `
+            <i class="fab fa-github repo-icon"></i>
+            <a href="${githubUrl}" target="_blank" title="Ouvrir sur GitHub">${result.data.name}</a>
+          `;
+          // Icône d'édition quand remote existe
+          remoteBtn.innerHTML = '<i class="fas fa-edit"></i>';
+          remoteBtn.title = 'Modifier le remote GitHub';
+          // Afficher le bouton reset remote quand un remote est configuré
+          resetRemoteBtn.style.display = 'inline-flex';
+        } else {
+          // Pas de remote configuré
+          repoInfo.innerHTML = `
+            <i class="fas fa-folder repo-icon"></i>
+            <span id="repoPath">${result.data.path || 'Dépôt local'}</span>
+          `;
+          // Icône de lien quand pas de remote
+          remoteBtn.innerHTML = '<i class="fas fa-link"></i>';
+          remoteBtn.title = 'Lier à GitHub';
+          // Masquer le bouton reset remote quand pas de remote
+          resetRemoteBtn.style.display = 'none';
+        }
+      } else {
+        repoInfo.innerHTML = `<i class="fas fa-folder repo-icon"></i> Dépôt local`;
+        remoteBtn.style.display = 'none';
+        resetRemoteBtn.style.display = 'none';
+      }
+    }
+
+    // Afficher le formulaire pour configurer le remote
+    function showRemoteForm() {
+      const modal = document.getElementById('confirmModal');
+      const modalContent = modal.querySelector('.modal-content');
+
+      modalContent.innerHTML = `
+        <h3><i class="fab fa-github"></i> Configurer le remote GitHub</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 15px;">
+          Entrez l'URL de votre dépôt GitHub :
+        </p>
+        <input type="text" id="remoteUrlInput" class="file-select"
+          placeholder="https://github.com/username/repo.git"
+          style="width: 100%; margin-bottom: 15px;">
+        <p style="color: var(--text-secondary); font-size: 0.85em; margin-bottom: 20px;">
+          <i class="fas fa-info-circle"></i> Vous pouvez aussi utiliser le format SSH : git@github.com:username/repo.git
+        </p>
+        <div class="modal-buttons">
+          <button class="btn btn-secondary" onclick="closeRemoteForm()">Annuler</button>
+          <button class="btn btn-danger" onclick="removeRemote()" id="removeRemoteBtn" style="display: none;">
+            <i class="fas fa-unlink"></i> Supprimer
+          </button>
+          <button class="btn btn-primary" onclick="saveRemote()">
+            <i class="fas fa-save"></i> Enregistrer
+          </button>
+        </div>
+      `;
+
+      // Pré-remplir si un remote existe déjà
+      apiCall('repoInfo').then(result => {
+        if (result.success && result.data.hasRemote) {
+          document.getElementById('remoteUrlInput').value = result.data.url || '';
+          document.getElementById('removeRemoteBtn').style.display = 'inline-flex';
+        }
+      });
+
+      modal.classList.add('active');
+    }
+
+    // Fermer le formulaire remote et restaurer la modal
+    function closeRemoteForm() {
+      const modal = document.getElementById('confirmModal');
+      const modalContent = modal.querySelector('.modal-content');
+
+      // Restaurer le contenu original de la modal
+      modalContent.innerHTML = `
+        <h3><i class="fas fa-question-circle"></i> Confirmation</h3>
+        <p id="confirmModalMessage">Êtes-vous sûr ?</p>
+        <div class="modal-buttons">
+          <button class="btn btn-secondary" onclick="closeModal(false)" id="cancelModalBtn">Annuler</button>
+          <button class="btn btn-danger" onclick="closeModal(true)" id="confirmModalBtn">Confirmer</button>
+        </div>
+      `;
+
+      modal.classList.remove('active');
+    }
+
+    // Enregistrer le remote
+    async function saveRemote() {
+      const url = document.getElementById('remoteUrlInput').value.trim();
+
+      if (!url) {
+        showAlert('error', 'Veuillez entrer une URL');
+        return;
+      }
+
+      const result = await apiCall('addRemote', { url });
+
+      if (result.success) {
+        if (result.warning) {
+          // Avertissement: fetch a échoué (problème SSH probable)
+          showAlert('warning', result.warning);
+          console.warn('Fetch error:', result.fetchError);
+        } else {
+          showAlert('success', result.output);
+        }
+        closeRemoteForm();
+        loadRepoInfo();
+        loadBranches(); // Recharger les branches distantes
+      } else {
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Supprimer le remote
+    async function removeRemote() {
+      // Utiliser confirm() natif car la modale est déjà utilisée par le formulaire
+      const confirmed = confirm('Supprimer la liaison avec GitHub ?\n\nCette action supprime uniquement le lien vers le dépôt distant, pas les fichiers.');
+      if (!confirmed) return;
+
+      const result = await apiCall('removeRemote');
+
+      if (result.success) {
+        showAlert('success', result.output);
+        closeRemoteForm();
+        loadRepoInfo();
+      } else {
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Toggle mode sombre
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('gitManagerDarkMode', isDark);
+      updateDarkModeIcon();
+    }
+
+    // Afficher la modale d'aide
+    function showHelpModal() {
+      document.getElementById('helpModal').classList.add('active');
+    }
+
+    // Fermer la modale d'aide
+    function closeHelpModal() {
+      document.getElementById('helpModal').classList.remove('active');
+    }
+
+    function updateDarkModeIcon() {
+      const btn = document.getElementById('darkModeBtn');
+      const isDark = document.body.classList.contains('dark-mode');
+      btn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      btn.title = isDark ? 'Mode clair' : 'Mode sombre';
+    }
+
+    // Actualiser toutes les sections
+    async function refreshAll() {
+      const btn = document.getElementById('refreshAllBtn');
+      const icon = btn.querySelector('i');
+      icon.classList.add('fa-spin');
+      btn.disabled = true;
+
+      await Promise.all([
+        loadStatus(),
+        loadHistory(),
+        loadGitignore(),
+        loadBranches()
+      ]);
+
+      icon.classList.remove('fa-spin');
+      btn.disabled = false;
+    }
+
+    // Modal de confirmation personnalisée
+    function showConfirm(message, isDanger = false, confirmLabel = 'Confirmer', cancelLabel = 'Annuler') {
+      return new Promise((resolve) => {
+        modalResolve = resolve;
+        document.getElementById('confirmModalMessage').textContent = message;
+        const confirmBtn = document.getElementById('confirmModalBtn');
+        const cancelBtn = document.getElementById('cancelModalBtn');
+        confirmBtn.className = isDanger ? 'btn btn-danger' : 'btn btn-primary';
+        confirmBtn.textContent = confirmLabel;
+        cancelBtn.textContent = cancelLabel;
+        document.getElementById('confirmModal').classList.add('active');
+      });
+    }
+
+    function closeModal(result) {
+      document.getElementById('confirmModal').classList.remove('active');
+      if (modalResolve) {
+        modalResolve(result);
+        modalResolve = null;
+      }
+    }
+
+    // Fermer les modales en cliquant à l'extérieur
+    document.addEventListener('click', function(e) {
+      if (e.target.id === 'confirmModal') {
+        closeModal(false);
+      }
+      if (e.target.id === 'helpModal') {
+        closeHelpModal();
+      }
+    });
+
+    // Afficher une alerte
+    function showAlert(type, message) {
+      const container = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+
+      // Icône selon le type
+      let icon = 'info-circle';
+      if (type === 'success') icon = 'check-circle';
+      else if (type === 'error') icon = 'exclamation-circle';
+      else if (type === 'warning') icon = 'exclamation-triangle';
+
+      alert.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+      container.innerHTML = '';
+      container.appendChild(alert);
+      setTimeout(() => alert.remove(), 8000); // 8s pour les warnings
+    }
+
+    // Ajouter du texte au terminal
+    function terminalLog(text, type = '') {
+      const terminal = document.getElementById('terminalOutput');
+      const line = document.createElement('div');
+      line.className = type;
+      line.textContent = text;
+      terminal.appendChild(line);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    // Effacer le terminal
+    function terminalClear() {
+      document.getElementById('terminalOutput').innerHTML = '';
+    }
+
+    // Appel API
+    async function apiCall(action, params = {}) {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action, ...params })
+        });
+        return await response.json();
+      } catch (error) {
+        return { success: false, error: error.message };
+      }
+    }
+
+    // Charger le statut
+    async function loadStatus() {
+      const statusContent = document.getElementById('statusContent');
+      statusContent.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> Chargement...</div>';
+
+      const result = await apiCall('status');
+
+      if (result.success) {
+        const data = result.data;
+        const totalStaged = (data.staged?.length || 0) + (data.stagedDeleted?.length || 0);
+        statusContent.innerHTML = `
+          <div class="status-info">
+            <div class="status-row">
+              <span class="status-label">Branche</span>
+              <span class="status-value branch">${data.branch}</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label"><span class="status-badge modified">M</span> Modifiés</span>
+              <span class="status-value">${data.modified.length}</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label"><span class="status-badge added">A</span> Stagés</span>
+              <span class="status-value">${totalStaged}</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label"><span class="status-badge deleted">D</span> Supprimés</span>
+              <span class="status-value">${data.stagedDeleted?.length || 0}</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label"><span class="status-badge untracked">?</span> Non suivis</span>
+              <span class="status-value">${data.untracked.length}</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label"><span class="ahead">↑</span> En avance</span>
+              <span class="status-value">${data.ahead || 0}</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label"><span class="behind">↓</span> En retard</span>
+              <span class="status-value">${data.behind || 0}</span>
+            </div>
+          </div>
+        `;
+
+        // Mettre à jour la liste des fichiers
+        updateFileList(data.modified, data.untracked, data.staged, data.stagedDeleted);
+
+        // Mettre à jour le select pour checkout
+        updateCheckoutSelect(data.modified, data.allFiles);
+      } else {
+        statusContent.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>${result.error}</p></div>`;
+      }
+    }
+
+    // Mettre à jour la liste des fichiers
+    function updateFileList(modified, untracked, staged, stagedDeleted) {
+      const fileList = document.getElementById('fileList');
+      const deletedSet = new Set(stagedDeleted || []);
+
+      // Filtrer les fichiers non suivis qui sont aussi stagés pour suppression
+      // (évite les doublons D et ? pour le même fichier)
+      const filteredUntracked = untracked.filter(f => !deletedSet.has(f));
+
+      const allFiles = [
+        ...(stagedDeleted || []).map(f => ({ name: f, status: 'D', type: 'deleted' })),
+        ...modified.map(f => ({ name: f, status: 'M', type: 'modified' })),
+        ...filteredUntracked.map(f => ({ name: f, status: '?', type: 'untracked' })),
+        ...(staged || []).map(f => ({ name: f, status: 'A', type: 'added' }))
+      ];
+
+      if (allFiles.length === 0) {
+        fileList.innerHTML = '<div class="empty-state"><i class="fas fa-check-circle"></i><p>Aucun fichier modifié</p></div>';
+        return;
+      }
+
+      fileList.innerHTML = `
+        <div class="select-all-row">
+          <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+          <label for="selectAll">Tout sélectionner</label>
+        </div>
+        ${allFiles.map(f => `
+          <div class="file-item">
+            <input type="checkbox" class="file-checkbox" value="${f.name}" data-status="${f.type}">
+            <span class="file-status ${f.type}">${f.status}</span>
+            <span class="file-name">${f.name}</span>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    // Mettre à jour le select checkout
+    function updateCheckoutSelect(modified, allFiles) {
+      const select = document.getElementById('checkoutFileSelect');
+      const deleteSelect = document.getElementById('deleteFileSelect');
+      // Toujours utiliser tous les fichiers pour pouvoir restaurer n'importe lequel
+      const files = allFiles || [];
+
+      select.innerHTML = '<option value="">-- Sélectionner un fichier --</option>';
+      deleteSelect.innerHTML = '<option value="">-- Sélectionner un fichier suivi --</option>';
+
+      files.forEach(f => {
+        // Pour le select checkout
+        const option = document.createElement('option');
+        option.value = f;
+        option.textContent = f;
+        // Marquer les fichiers modifiés
+        if (modified.includes(f)) {
+          option.textContent = f + ' (modifié)';
+          option.style.fontWeight = 'bold';
+        }
+        select.appendChild(option);
+
+        // Pour le select delete
+        const deleteOption = document.createElement('option');
+        deleteOption.value = f;
+        deleteOption.textContent = f;
+        if (modified.includes(f)) {
+          deleteOption.textContent = f + ' (modifié)';
+          deleteOption.style.fontWeight = 'bold';
+        }
+        deleteSelect.appendChild(deleteOption);
+      });
+    }
+
+    // Toggle select all
+    function toggleSelectAll() {
+      const selectAll = document.getElementById('selectAll');
+      const checkboxes = document.querySelectorAll('.file-checkbox');
+      checkboxes.forEach(cb => cb.checked = selectAll.checked);
+    }
+
+    // Obtenir les fichiers sélectionnés
+    function getSelectedFiles() {
+      const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+      return Array.from(checkboxes).map(cb => cb.value);
+    }
+
+    // Obtenir les fichiers sélectionnés avec leur statut
+    function getSelectedFilesWithStatus() {
+      const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+      return Array.from(checkboxes).map(cb => ({
+        name: cb.value,
+        status: cb.dataset.status
+      }));
+    }
+
+    // Charger l'historique
+    async function loadHistory() {
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> Chargement...</div>';
+
+      const result = await apiCall('log');
+
+      if (result.success && result.data.length > 0) {
+        historyList.innerHTML = result.data.map(commit => `
+          <div class="commit-item">
+            <span class="commit-hash">${commit.hash}</span>
+            <div class="commit-message">${commit.message}</div>
+            <div class="commit-meta">
+              <span><i class="fas fa-user"></i>${commit.author}</span>
+              <span><i class="fas fa-calendar"></i>${commit.date}</span>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        historyList.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i><p>Aucun commit trouvé</p></div>';
+      }
+    }
+
+    // Stager les fichiers sélectionnés (git add)
+    async function stageFiles() {
+      const selectedFiles = getSelectedFiles();
+
+      if (selectedFiles.length === 0) {
+        showAlert('error', 'Veuillez sélectionner au moins un fichier à stager');
+        return;
+      }
+
+      terminalClear();
+      terminalLog(`$ git add ${selectedFiles.join(' ')}`, 'info');
+
+      const result = await apiCall('stageFiles', { files: selectedFiles });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', result.output);
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Retirer les fichiers du staging (git reset)
+    async function unstageFiles() {
+      const selectedFiles = getSelectedFiles();
+
+      if (selectedFiles.length === 0) {
+        showAlert('error', 'Veuillez sélectionner au moins un fichier à unstager');
+        return;
+      }
+
+      terminalClear();
+      terminalLog(`$ git reset HEAD -- ${selectedFiles.join(' ')}`, 'info');
+
+      const result = await apiCall('unstageFiles', { files: selectedFiles });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', result.output);
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Faire un commit
+    async function doCommit() {
+      const selectedFiles = getSelectedFilesWithStatus();
+      const message = document.getElementById('commitMessage').value.trim();
+
+      if (selectedFiles.length === 0) {
+        showAlert('error', 'Veuillez sélectionner au moins un fichier');
+        return;
+      }
+
+      if (!message) {
+        showAlert('error', 'Veuillez entrer un message de commit');
+        return;
+      }
+
+      // Séparer les fichiers : ceux à ajouter vs ceux déjà stagés (suppressions)
+      const filesToAdd = selectedFiles.filter(f => f.status !== 'deleted').map(f => f.name);
+      const hasStaged = selectedFiles.some(f => f.status === 'deleted');
+
+      terminalClear();
+      if (filesToAdd.length > 0) {
+        terminalLog('$ git add ' + filesToAdd.join(' '), 'info');
+      }
+      if (hasStaged) {
+        terminalLog('$ (fichiers stagés pour suppression inclus)', 'info');
+      }
+      terminalLog('$ git commit -m "' + message + '"', 'info');
+
+      const result = await apiCall('commit', { files: filesToAdd, message, hasStaged });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', 'Commit effectué avec succès');
+        document.getElementById('commitMessage').value = '';
+        loadStatus();
+        loadHistory();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur lors du commit: ' + result.error);
+      }
+    }
+
+    // Commit et Push
+    async function doCommitAndPush() {
+      const selectedFiles = getSelectedFilesWithStatus();
+      const message = document.getElementById('commitMessage').value.trim();
+
+      if (selectedFiles.length === 0) {
+        showAlert('error', 'Veuillez sélectionner au moins un fichier');
+        return;
+      }
+
+      if (!message) {
+        showAlert('error', 'Veuillez entrer un message de commit');
+        return;
+      }
+
+      // Séparer les fichiers : ceux à ajouter vs ceux déjà stagés (suppressions)
+      const filesToAdd = selectedFiles.filter(f => f.status !== 'deleted').map(f => f.name);
+      const hasStaged = selectedFiles.some(f => f.status === 'deleted');
+
+      terminalClear();
+      terminalLog('$ git add && git commit && git push', 'info');
+
+      const result = await apiCall('commitAndPush', { files: filesToAdd, message, hasStaged });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', 'Commit et Push effectués avec succès');
+        document.getElementById('commitMessage').value = '';
+        loadStatus();
+        loadHistory();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Push
+    async function doPush() {
+      terminalClear();
+      terminalLog('$ git push origin', 'info');
+
+      const result = await apiCall('push');
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', 'Push effectué avec succès');
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur lors du push: ' + result.error);
+      }
+    }
+
+    // Pull
+    async function doPull() {
+      terminalClear();
+      terminalLog('$ git pull origin', 'info');
+
+      const result = await apiCall('pull');
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', 'Pull effectué avec succès');
+        loadStatus();
+        loadHistory();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur lors du pull: ' + result.error);
+      }
+    }
+
+    // Fetch
+    async function doFetch() {
+      terminalClear();
+      terminalLog('$ git fetch origin', 'info');
+
+      const result = await apiCall('fetch');
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', 'Fetch effectué avec succès');
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur lors du fetch: ' + result.error);
+      }
+    }
+
+    // Charger les commits d'un fichier spécifique
+    async function loadFileCommits() {
+      const file = document.getElementById('checkoutFileSelect').value;
+      const container = document.getElementById('fileCommitsContainer');
+      const select = document.getElementById('fileCommitsSelect');
+
+      if (!file) {
+        container.style.display = 'none';
+        return;
+      }
+
+      const result = await apiCall('fileLog', { file });
+
+      if (result.success && result.data.length > 0) {
+        select.innerHTML = '<option value="">-- Commits pour ce fichier --</option>';
+        result.data.forEach(commit => {
+          const option = document.createElement('option');
+          option.value = commit.hash;
+          option.textContent = `${commit.hash} - ${commit.message} (${commit.date})`;
+          select.appendChild(option);
+        });
+        container.style.display = 'block';
+      } else {
+        container.style.display = 'none';
+      }
+    }
+
+    // Checkout un fichier
+    async function doCheckout() {
+      const file = document.getElementById('checkoutFileSelect').value;
+      const fileCommit = document.getElementById('fileCommitsSelect').value;
+      const source = fileCommit || document.getElementById('checkoutSource').value;
+
+      if (!file) {
+        showAlert('error', 'Veuillez sélectionner un fichier');
+        return;
+      }
+
+      const confirmed = await showConfirm(`Êtes-vous sûr de vouloir récupérer "${file}" depuis ${source} ? Les modifications locales seront perdues.`);
+      if (!confirmed) return;
+
+      terminalClear();
+      terminalLog(`$ git checkout ${source} -- ${file}`, 'info');
+
+      const result = await apiCall('checkout', { file, source });
+
+      if (result.success) {
+        terminalLog(result.output || 'Fichier récupéré avec succès', 'success');
+        showAlert('success', `Fichier "${file}" récupéré avec succès`);
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Annuler toutes les modifications
+    async function doDiscardAll() {
+      const confirmed = await showConfirm('ATTENTION: Toutes les modifications locales seront perdues. Êtes-vous sûr ?', true);
+      if (!confirmed) return;
+
+      terminalClear();
+      terminalLog('$ git checkout -- .', 'info');
+
+      const result = await apiCall('discardAll');
+
+      if (result.success) {
+        terminalLog('Toutes les modifications ont été annulées', 'success');
+        showAlert('success', 'Modifications annulées');
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Supprimer un fichier du dépôt ET du disque
+    async function doRemoveFromRepo() {
+      const file = document.getElementById('deleteFileSelect').value;
+
+      if (!file) {
+        showAlert('error', 'Veuillez sélectionner un fichier');
+        return;
+      }
+
+      const confirmed = await showConfirm(`ATTENTION: Le fichier "${file}" sera supprimé du dépôt ET de votre disque. Cette action est irréversible. Êtes-vous sûr ?`, true);
+      if (!confirmed) return;
+
+      terminalClear();
+      terminalLog(`$ git rm ${file}`, 'info');
+
+      const result = await apiCall('removeFromRepo', { file });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', `Fichier "${file}" supprimé. Sélectionnez le fichier D et faites Commit & Push !`);
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Arrêter le suivi d'un fichier (sans le supprimer du disque)
+    async function doUntrackFile() {
+      const file = document.getElementById('deleteFileSelect').value;
+
+      if (!file) {
+        showAlert('error', 'Veuillez sélectionner un fichier');
+        return;
+      }
+
+      const confirmed = await showConfirm(`Le fichier "${file}" sera retiré du suivi Git mais conservé sur votre disque. Voulez-vous continuer ?`);
+      if (!confirmed) return;
+
+      terminalClear();
+      terminalLog(`$ git rm --cached ${file}`, 'info');
+
+      const result = await apiCall('untrackFile', { file });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', `Fichier "${file}" retiré du suivi. Sélectionnez le fichier D et faites Commit & Push !`);
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Charger le contenu de .gitignore
+    async function loadGitignore() {
+      const list = document.getElementById('gitignoreList');
+      list.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> Chargement...</div>';
+
+      const result = await apiCall('getGitignore');
+
+      if (result.success) {
+        const patterns = result.data.patterns || [];
+
+        if (patterns.length === 0) {
+          list.innerHTML = '<div class="gitignore-empty"><i class="fas fa-check-circle"></i> Aucun fichier ignoré</div>';
+        } else {
+          list.innerHTML = patterns.map(pattern => `
+            <div class="gitignore-item">
+              <span class="pattern">${pattern}</span>
+              <button class="remove-btn" onclick="removeFromGitignore('${pattern.replace(/'/g, "\\'")}')" title="Retirer">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          `).join('');
+        }
+
+        // Mettre à jour la liste des fichiers non suivis
+        updateUntrackedSelect(result.data.untracked || []);
+      } else {
+        list.innerHTML = '<div class="gitignore-empty"><i class="fas fa-exclamation-triangle"></i> Erreur de chargement</div>';
+      }
+    }
+
+    // Mettre à jour le select des fichiers non suivis
+    function updateUntrackedSelect(files) {
+      const select = document.getElementById('untrackedFiles');
+      select.innerHTML = '<option value="">-- Fichiers non suivis --</option>';
+      files.forEach(f => {
+        const option = document.createElement('option');
+        option.value = f;
+        option.textContent = f;
+        select.appendChild(option);
+      });
+    }
+
+    // Ajouter un fichier au .gitignore (depuis le select)
+    async function addToGitignore() {
+      const select = document.getElementById('untrackedFiles');
+      const pattern = select.value;
+
+      if (!pattern) {
+        showAlert('error', 'Veuillez sélectionner un fichier');
+        return;
+      }
+
+      await addPatternToGitignore(pattern);
+    }
+
+    // Ajouter un pattern personnalisé au .gitignore
+    async function addCustomToGitignore() {
+      const input = document.getElementById('customIgnore');
+      const pattern = input.value.trim();
+
+      if (!pattern) {
+        showAlert('error', 'Veuillez saisir un pattern');
+        return;
+      }
+
+      await addPatternToGitignore(pattern);
+      input.value = '';
+    }
+
+    // Ajouter un pattern au .gitignore
+    async function addPatternToGitignore(pattern) {
+      terminalClear();
+      terminalLog(`Ajout de "${pattern}" à .gitignore`, 'info');
+
+      const result = await apiCall('addToGitignore', { pattern });
+
+      if (result.success) {
+        terminalLog('Pattern ajouté avec succès', 'success');
+        showAlert('success', `"${pattern}" ajouté au .gitignore`);
+        loadGitignore();
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Retirer un pattern du .gitignore
+    async function removeFromGitignore(pattern) {
+      const confirmed = await showConfirm(`Retirer "${pattern}" du .gitignore ?`);
+      if (!confirmed) return;
+
+      terminalClear();
+      terminalLog(`Retrait de "${pattern}" de .gitignore`, 'info');
+
+      const result = await apiCall('removeFromGitignore', { pattern });
+
+      if (result.success) {
+        terminalLog('Pattern retiré avec succès', 'success');
+        showAlert('success', `"${pattern}" retiré du .gitignore`);
+        loadGitignore();
+        loadStatus();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // ========== GESTION DES BRANCHES ==========
+
+    // Charger la liste des branches
+    async function loadBranches() {
+      const content = document.getElementById('branchesContent');
+      content.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> Chargement...</div>';
+
+      const result = await apiCall('branches');
+
+      if (result.success) {
+        const { current, local, remote, isDetached, detachedAt } = result.data;
+        let html = '';
+
+        // Avertissement si HEAD détaché
+        if (isDetached) {
+          html += `
+            <div class="alert alert-info" style="margin-bottom: 15px;">
+              <i class="fas fa-exclamation-triangle"></i>
+              <strong>HEAD détaché</strong> sur le commit <code>${detachedAt}</code><br>
+              <small>Vous n'êtes sur aucune branche. Basculez sur une branche pour pouvoir publier.</small>
+            </div>
+          `;
+        }
+
+        // Branches locales (triées avec l'actuelle en premier)
+        if (local.length > 0) {
+          const sortedLocal = [...local].sort((a, b) => {
+            if (a.current) return -1;
+            if (b.current) return 1;
+            return a.name.localeCompare(b.name);
+          });
+
+          html += '<div class="branch-section-title"><i class="fas fa-laptop"></i> Branches locales</div>';
+          html += '<div class="branch-list">';
+          sortedLocal.forEach(branch => {
+            const isCurrent = branch.current;
+            const hasUpstream = branch.upstream && branch.upstream.length > 0;
+            html += `
+              <div class="branch-item ${isCurrent ? 'current' : ''}">
+                <div class="branch-info">
+                  <span class="branch-name ${isCurrent ? 'current' : ''}">${branch.name}</span>
+                  <span class="branch-badge ${isCurrent ? '' : 'hidden'}">${isCurrent ? 'actuelle' : ''}</span>
+                  ${hasUpstream ? '<span class="branch-badge tracked"><i class="fas fa-cloud"></i> suivie</span>' : '<span class="branch-badge local-only">locale</span>'}
+                  <span class="branch-tracking">
+                    ${branch.ahead > 0 ? `<span class="ahead">↑${branch.ahead}</span>` : ''}
+                    ${branch.behind > 0 ? `<span class="behind">↓${branch.behind}</span>` : ''}
+                  </span>
+                </div>
+                <div class="branch-actions">
+                  ${!hasUpstream ? `
+                    <button class="publish-btn" onclick="pushBranch('${branch.name}')" title="Publier sur GitHub">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                    </button>
+                  ` : ''}
+                  <button class="rename-btn" onclick="renameBranch('${branch.name}')" title="Renommer">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  ${!isCurrent ? `
+                    <button class="switch-btn" onclick="switchBranch('${branch.name}')" title="Basculer">
+                      <i class="fas fa-exchange-alt"></i>
+                    </button>
+                    <button class="merge-btn" onclick="mergeBranch('${branch.name}')" title="Fusionner dans ${current}">
+                      <i class="fas fa-code-branch"></i>
+                    </button>
+                    <button class="delete-btn" onclick="deleteBranch('${branch.name}', ${hasUpstream})" title="Supprimer">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          });
+          html += '</div>';
+        }
+
+        // Branches distantes non trackées
+        if (remote.length > 0) {
+          html += '<div class="branch-section-title"><i class="fas fa-cloud"></i> Branches distantes</div>';
+          html += '<div class="branch-list">';
+          remote.forEach(branch => {
+            // Extraire le nom de branche sans le préfixe origin/
+            const branchName = branch.replace(/^origin\//, '');
+            html += `
+              <div class="branch-item">
+                <div class="branch-info">
+                  <span class="branch-name">${branch}</span>
+                  <span class="branch-badge remote-only">distante</span>
+                </div>
+                <div class="branch-actions">
+                  <button class="switch-btn" onclick="switchBranch('${branch}')" title="Récupérer et basculer">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button class="delete-btn" onclick="deleteRemoteBranchDirect('${branchName}')" title="Supprimer sur origin">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+          html += '</div>';
+        }
+
+        if (local.length === 0 && remote.length === 0) {
+          html = '<div class="empty-state"><i class="fas fa-code-branch"></i><p>Aucune branche trouvée</p></div>';
+        }
+
+        content.innerHTML = html;
+
+        // Remplir le sélecteur de branche source
+        const sourceSelect = document.getElementById('sourceBranchSelect');
+        if (sourceSelect) {
+          let options = '<option value="">Depuis: branche actuelle</option>';
+          options += '<option value="__orphan__">🆕 Branche vide (sans fichiers, sans historique)</option>';
+          options += '<option value="__freshstart__">🔄 Nouveau départ (fichiers actuels, sans historique)</option>';
+          // Ajouter les branches locales
+          local.forEach(branch => {
+            options += `<option value="${branch.name}">${branch.name}${branch.current ? ' (actuelle)' : ''}</option>`;
+          });
+          // Ajouter les branches distantes
+          remote.forEach(branch => {
+            options += `<option value="${branch}">${branch}</option>`;
+          });
+          sourceSelect.innerHTML = options;
+        }
+      } else {
+        content.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>' + result.error + '</p></div>';
+      }
+    }
+
+    // Changer de branche
+    async function switchBranch(branch, force = false) {
+      if (!force) {
+        const confirmed = await showConfirm(`Basculer vers la branche "${branch}" ?`);
+        if (!confirmed) return;
+      }
+
+      terminalClear();
+      const forceFlag = force ? '-f ' : '';
+      terminalLog(`$ git checkout ${forceFlag}${branch}`, 'info');
+
+      const result = await apiCall('switchBranch', { branch, force });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', result.output);
+        refreshAll();
+      } else {
+        terminalLog(result.error, 'error');
+
+        // Si l'erreur est due à des fichiers non suivis, proposer le force checkout
+        if (result.needsForce) {
+          const forceConfirmed = await showConfirm(
+            `Des fichiers non suivis bloquent le basculement.\n\n` +
+            `⚠️ Forcer le basculement ?\n\n` +
+            `ATTENTION : Les fichiers locaux en conflit seront écrasés par ceux de la branche "${branch}".`,
+            true
+          );
+          if (forceConfirmed) {
+            await switchBranch(branch, true);
+            return;
+          }
+        }
+
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Créer une nouvelle branche
+    async function createBranch() {
+      const input = document.getElementById('newBranchName');
+      const sourceSelect = document.getElementById('sourceBranchSelect');
+      const branchName = input.value.trim();
+      const sourceBranch = sourceSelect ? sourceSelect.value : '';
+      const isOrphan = sourceBranch === '__orphan__';
+      const isFreshStart = sourceBranch === '__freshstart__';
+
+      if (!branchName) {
+        showAlert('error', 'Veuillez entrer un nom de branche');
+        return;
+      }
+
+      terminalClear();
+      if (isOrphan) {
+        terminalLog(`$ git checkout --orphan ${branchName}`, 'info');
+        terminalLog(`$ git rm -rf --cached .`, 'info');
+        terminalLog(`$ git commit --allow-empty -m "Initial commit"`, 'info');
+      } else if (isFreshStart) {
+        terminalLog(`$ git checkout --orphan ${branchName}`, 'info');
+        terminalLog(`$ git add -A`, 'info');
+        terminalLog(`$ git commit -m "Fresh start"`, 'info');
+      } else if (sourceBranch) {
+        terminalLog(`$ git checkout -b ${branchName} ${sourceBranch}`, 'info');
+      } else {
+        terminalLog(`$ git checkout -b ${branchName}`, 'info');
+      }
+
+      const params = { branch: branchName, checkout: true };
+      if (isOrphan) {
+        params.orphan = true;
+      } else if (isFreshStart) {
+        params.freshStart = true;
+      } else if (sourceBranch) {
+        params.sourceBranch = sourceBranch;
+      }
+
+      const result = await apiCall('createBranch', params);
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', result.output);
+        input.value = '';
+        if (sourceSelect) sourceSelect.value = '';
+        refreshAll();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Renommer une branche
+    async function renameBranch(oldName) {
+      const modal = document.getElementById('confirmModal');
+      const modalContent = modal.querySelector('.modal-content');
+
+      modalContent.innerHTML = `
+        <h3><i class="fas fa-pen"></i> Renommer la branche</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 15px;">
+          Renommer la branche <strong>${oldName}</strong> :
+        </p>
+        <input type="text" id="newBranchNameInput" class="file-select"
+          value="${oldName}"
+          style="width: 100%; margin-bottom: 20px;">
+        <div class="modal-buttons">
+          <button class="btn btn-secondary" onclick="closeRemoteForm()">Annuler</button>
+          <button class="btn btn-primary" onclick="confirmRenameBranch('${oldName}')">
+            <i class="fas fa-check"></i> Renommer
+          </button>
+        </div>
+      `;
+
+      modal.classList.add('active');
+
+      // Focus et sélection du texte
+      setTimeout(() => {
+        const input = document.getElementById('newBranchNameInput');
+        input.focus();
+        input.select();
+      }, 100);
+    }
+
+    // Confirmer le renommage
+    async function confirmRenameBranch(oldName) {
+      const newName = document.getElementById('newBranchNameInput').value.trim();
+
+      if (!newName) {
+        showAlert('error', 'Veuillez entrer un nom de branche');
+        return;
+      }
+
+      if (newName === oldName) {
+        closeRemoteForm();
+        return;
+      }
+
+      terminalClear();
+      terminalLog(`$ git branch -m ${oldName} ${newName}`, 'info');
+
+      const result = await apiCall('renameBranch', { oldName, newName });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', result.output);
+        closeRemoteForm();
+        refreshAll();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Supprimer une branche
+    async function deleteBranch(branch, hasUpstream = false) {
+      const confirmed = await showConfirm(`Supprimer la branche "${branch}" ? Cette action est irréversible.`, true);
+      if (!confirmed) return;
+
+      terminalClear();
+      terminalLog(`$ git branch -d ${branch}`, 'info');
+
+      const result = await apiCall('deleteBranch', { branch });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', result.output);
+
+        // Proposer de supprimer aussi sur le dépôt distant si la branche était publiée
+        if (hasUpstream) {
+          const deleteRemote = await showConfirm(`Supprimer aussi la branche "${branch}" sur GitHub ?`, true, 'Oui', 'Non');
+          if (deleteRemote) {
+            await deleteRemoteBranch(branch);
+          }
+        }
+
+        loadBranches();
+      } else {
+        // Si la branche n'est pas fusionnée, proposer la suppression forcée
+        if (result.error.includes('not fully merged')) {
+          const forceDelete = await showConfirm(`La branche "${branch}" n'est pas fusionnée. Forcer la suppression ?`, true);
+          if (forceDelete) {
+            terminalLog(`$ git branch -D ${branch}`, 'info');
+            const forceResult = await apiCall('deleteBranch', { branch, force: true });
+            if (forceResult.success) {
+              terminalLog(forceResult.output, 'success');
+              showAlert('success', forceResult.output);
+
+              // Proposer de supprimer aussi sur le dépôt distant
+              if (hasUpstream) {
+                const deleteRemote = await showConfirm(`Supprimer aussi la branche "${branch}" sur GitHub ?`, true, 'Oui', 'Non');
+                if (deleteRemote) {
+                  await deleteRemoteBranch(branch);
+                }
+              }
+
+              loadBranches();
+            } else {
+              terminalLog(forceResult.error, 'error');
+              showAlert('error', 'Erreur: ' + forceResult.error);
+            }
+          }
+        } else {
+          terminalLog(result.error, 'error');
+          showAlert('error', 'Erreur: ' + result.error);
+        }
+      }
+    }
+
+    // Supprimer une branche sur le dépôt distant
+    async function deleteRemoteBranch(branch) {
+      terminalLog(`$ git push origin --delete ${branch}`, 'info');
+
+      const result = await apiCall('deleteRemoteBranch', { branch });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', result.output);
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+
+    // Supprimer une branche distante directement (depuis la liste des branches distantes)
+    async function deleteRemoteBranchDirect(branch) {
+      const confirmed = await showConfirm(`Supprimer la branche "${branch}" sur GitHub ?\n\nCette action est irréversible.`, true);
+      if (!confirmed) return;
+
+      terminalClear();
+      await deleteRemoteBranch(branch);
+      await loadBranches();
+    }
+
+    // Fusionner une branche
+    async function mergeBranch(branch) {
+      const confirmed = await showConfirm(`Fusionner la branche "${branch}" dans la branche actuelle ?`);
+      if (!confirmed) return;
+
+      terminalClear();
+      terminalLog(`$ git merge ${branch}`, 'info');
+
+      const result = await apiCall('mergeBranch', { branch });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', `Branche "${branch}" fusionnée avec succès`);
+        refreshAll();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur de fusion: ' + result.error);
+      }
+    }
+
+    // Publier une branche sur le dépôt distant
+    async function pushBranch(branch) {
+      const confirmed = await showConfirm(`Publier la branche "${branch}" sur GitHub ?`);
+      if (!confirmed) return;
+
+      terminalClear();
+      terminalLog(`$ git push -u origin ${branch}`, 'info');
+
+      const result = await apiCall('pushBranch', { branch });
+
+      if (result.success) {
+        terminalLog(result.output, 'success');
+        showAlert('success', result.output);
+        loadBranches();
+      } else {
+        terminalLog(result.error, 'error');
+        showAlert('error', 'Erreur: ' + result.error);
+      }
+    }
+  </script>
+</body>
+
+</html>
